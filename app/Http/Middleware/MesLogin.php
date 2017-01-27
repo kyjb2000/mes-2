@@ -18,6 +18,7 @@ class MesLogin
         if(!session('user')){
             return redirect('login');
         }
+//        echo session("user");
         return $next($request);
     }
 }

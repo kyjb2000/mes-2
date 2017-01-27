@@ -89,7 +89,8 @@
 
                             </tfoot>
                         </table>
-
+                        <input id="msg" type="hidden" value="{{$msg}}">
+                        <input id="err" type="hidden" value="{{$err}}">
                     </div>
                 </div>
             </div>
@@ -146,11 +147,21 @@
 
     <!-- 自定义js -->
     {{--<script src="{{asset('resources/js/content.js?v=1.0.0')}}"></script>--}}
-
+    <script src="{{asset('resources/js/plugins/toastr/toastr.min.js')}}"></script>
 
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function () {
+            var msg = $("#msg").val();
+            var err = $("#err").val();
+            if(msg.length > 0)
+            {
+                toastr.success(msg, 'Success Massage!')
+            }
+            if(err.length > 0)
+            {
+                toastr.error(err, 'Error Massage!')
+            }
             $("#search_result").click(function () {
                 var start = $("#start").val();
                 var end = $("#end").val();
@@ -198,14 +209,6 @@
 
         });
 
-        function fnClickAddRow() {
-            $('#editable').dataTable().fnAddData([
-                "Custom row",
-                "New row",
-                "New row",
-                "New row",
-                "New row"]);
 
-        }
     </script>
 @endsection

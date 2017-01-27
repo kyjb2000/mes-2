@@ -29,27 +29,30 @@
 
     {{--主体内容--}}
     @section('content')
-        <style>
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 96px;
-            }
-        </style>
-        <div class="container">
-            <div class="content">
-                <div class="title">欢迎使用福联MES平台</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>制造部文化</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="text-danger">纪律 服务 效率
+                            <small>
+                                <p class="text-success"></p>
+                                <p class="text-danger">工作要求：严守纪律、忠于所托</p>
+                                <p class="text-danger">工作态度：积极服务、乐于助人</p>
+                                <p class="text-danger">工作方法：重视效率、勤于学习</p>
+                            </small>
+                        </h1>
+                    </div>
+                </div>
             </div>
+
         </div>
     @show
 

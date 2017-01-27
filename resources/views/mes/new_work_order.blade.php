@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-8">
-                                    <button type="button" id="commit" class="btn btn-success" style="float: right;">提交</button>
+                                    <button type="submit" id="commit" class="btn btn-success" style="float: right;">提交</button>
                                 </div>
                                 <input id="msg" type="hidden" value="{{$msg}}">
                                 <input id="err" type="hidden" value="{{$err}}">
@@ -96,6 +96,8 @@
 @section('plugins')
 <script src="{{asset('resources/js/plugins/layer/laydate/laydate.js')}}"></script>
 <script src="{{asset('resources/js/plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{asset('resources/js/plugins/validate/jquery.validate.min.js')}}"></script>
+<script src="{{asset('resources/js/plugins/validate/messages_zh.min.js')}}"></script>
 <script>
     $(document).ready(function () {
         var msg = $("#msg").val();
@@ -108,74 +110,113 @@
         {
             toastr.error(err, 'Error Massage!')
         }
-        $("#commit").click(function () {
-            var work_name = $("#work_name").val();
-            var product = $("#product").val();
-            var lot_type = $("#lot_type").val();
-            var qty = $("#qty").val();
-            var owner = $("#owner").val();
-            var customer = $("#customer").val();
-//            var start_day = $("input[name='start_day']").val();
-            var due_day = $("input[name='due_day']").val();
-
-            if(work_name.length<=0)
-            {
-                layer.alert('未填写工单号！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#add_work").validate({
+            rules: {
+                work_name: {
+                    required: true,
+                    minlength: 4
+                },
+                product: "required",
+                lot_type: "required",
+                qty: {
+                    required: true,
+                    digits:true
+                },
+                owner: "required",
+                customer: "required",
+                due_day: {
+                    required: true,
+                    date:true
+                }
+            },
+            message: {
+                work_name: {
+                    required:icon + "请输入工单号",
+                    minlength:icon + "工单号长度最少为4个字符"
+                },
+                product: icon + "请选择产品",
+                lot_type: icon + "请选择Lot Type",
+                qty: {
+                    required: icon + "请输入数量",
+                    digits: icon + "请填入整数"
+                },
+                owner: icon + "请输入负责人",
+                customer: icon + "请输入客户名",
+                due_day: {
+                    required: icon + "请选择预计完成时间",
+                    date: icon + "请填入正确的日期格式"
+                }
             }
-            if(product.length<=0)
-            {
-                layer.alert('未选择制程代码！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            if(lot_type.length<=0)
-            {
-                layer.alert('未选择Lot Type！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            if(qty.length<=0)
-            {
-                layer.alert('未填入数量！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            if(owner.length<=0)
-            {
-                layer.alert('未填入负责人！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            if(customer.length<=0)
-            {
-                layer.alert('未填入客户信息！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            if(due_day.length<=0)
-            {
-                layer.alert('未选择预计完成日期！', {
-                    icon: 8,
-                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                });
-                return;
-            }
-            $("#add_work").submit();
         });
+//        $("#commit").click(function () {
+//            var work_name = $("#work_name").val();
+//            var product = $("#product").val();
+//            var lot_type = $("#lot_type").val();
+//            var qty = $("#qty").val();
+//            var owner = $("#owner").val();
+//            var customer = $("#customer").val();
+////            var start_day = $("input[name='start_day']").val();
+//            var due_day = $("input[name='due_day']").val();
+//
+//            if(work_name.length<=0)
+//            {
+//                layer.alert('未填写工单号！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(product.length<=0)
+//            {
+//                layer.alert('未选择制程代码！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(lot_type.length<=0)
+//            {
+//                layer.alert('未选择Lot Type！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(qty.length<=0)
+//            {
+//                layer.alert('未填入数量！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(owner.length<=0)
+//            {
+//                layer.alert('未填入负责人！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(customer.length<=0)
+//            {
+//                layer.alert('未填入客户信息！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            if(due_day.length<=0)
+//            {
+//                layer.alert('未选择预计完成日期！', {
+//                    icon: 8,
+//                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+//                });
+//                return;
+//            }
+//            $("#add_work").submit();
+//        });
     });
 
     //外部js调用

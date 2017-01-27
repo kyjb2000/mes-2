@@ -25,7 +25,7 @@
 						<span><i class="fa fa-lock"></i></span>
 					</li>
 					<li>
-						<input type="text" class="code" name="code"/>
+						<input type="text" class="code" name="code" autocomplete="off"/>
 						<span><i class="fa fa-check-square-o"></i></span>
 						<img src="code" alt="" onclick="this.src='{{url('/code')}}?'+Math.random()">
 					</li>

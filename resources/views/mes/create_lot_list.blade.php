@@ -3,19 +3,29 @@
 
 @endsection
 @section('content')
-
+    @if($work_order->work_order_type == 0)
+        <?php $lot_first_name = "P"; ?>
+    @elseif($work_order->work_order_type == 1)
+        <?php $lot_first_name = "Q"; ?>
+    @elseif($work_order->work_order_type == 2)
+        <?php $lot_first_name = "R"; ?>
+    @else
+        <?php $lot_first_name = "P"; ?>
+    @endif
         <div class="row">
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Run Card开立</h5>
+                        <h5>Create Lot</h5>
 
                         <div class="ibox-tools">
 
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-
+<!--                            <a href="{{url('create_run_card')}}?--><?php //echo lcg_value(); ?><!--">-->
+<!--                                <i class="fa fa-refresh"></i>-->
+<!--                            </a>-->
                         </div>
                     </div>
                     <div class="ibox-content">
@@ -27,8 +37,8 @@
                                     <th>Lot No</th>
                                     <th>QTY</th>
                                     <th>Lot Type</th>
-                                    <th>Priority</th>
-                                    <th>Process Name</th>
+                                    <th>priority</th>
+                                    <th>Product Name</th>
                                     <th>Create Date</th>
                                     <th>Comment</th>
                                 </tr>
@@ -36,39 +46,24 @@
                             <tbody>
 
                                 <?php $num = 1; ?>
-                                @foreach ($lot_no as $lot_no)
+                                @foreach ($lot_no as $lot)
                                     <tr>
                                         <td>{{$num}}</td>
+                                        <td>{{$lot_first_name.$lot->lot_no_id}}</td>
                                         <td>
-                                            {{$lot_no->lot_no_id}}
-                                        </td>
-                                        <td>
-                                            @if((ceil($all_num / $per_num)) == $num)
-                                                @if($all_num % $per_num == 0)
-                                                    {{$per_num}}
-                                                @else
-                                                    {{$all_num % $per_num}}
-                                                @endif
-                                            @else
+                                            @if($num != ceil($all_num / $per_num) || ($all_num % $per_num) == 0)
                                                 {{$per_num}}
+                                            @else
+                                                {{$all_num % $per_num}}
                                             @endif
                                         </td>
                                         <td>
-                                            @if($work_order->work_order_type == 0)
-                                                P
-                                            @elseif($work_order->work_order_type == 1)
-                                                Q
-                                            @elseif($work_order->work_order_type == 2)
-                                                R
-                                            @else
-                                                P
-                                            @endif
+                                            {{$lot_first_name}}
                                         </td>
                                         <td>{{$priority}}</td>
-                                        <td>{{$work_order->work_order_pro_name}}</td>
-                                        <td>{{$bill_date}}</td>
+                                        <td>{{$work_order->work_order_product_name}}</td>
+                                        <td>{{$date}}</td>
                                         <td></td>
-
                                     </tr>
                                     <?php $num++; ?>
                                 @endforeach
@@ -80,24 +75,26 @@
                                 <th>Lot No</th>
                                 <th>QTY</th>
                                 <th>Lot Type</th>
-                                <th>Priority</th>
-                                <th>Process Name</th>
+                                <th>priority</th>
+                                <th>Product Name</th>
                                 <th>Create Date</th>
                                 <th>Comment</th>
                             </tr>
 
                             </tfoot>
                         </table>
+                        {{--<div class="form-group col-sm-8">--}}
+                        <form method="post" action="{{url('new_lots')}}/{{$work_order->work_order_serial}}" id="create_lot">
+                            {{csrf_field()}}
+                            <input type="hidden" name="all_num" value="{{$all_num}}">
+                            <input type="hidden" name="per_num" value="{{$per_num}}">
+                            <input type="hidden" name="priority" value="{{$priority}}">
+                            <input type="hidden" name="max_num" value="{{$work_order->work_order_rest_qty-$work_order->work_order_wip_qty}}">
+                            <button id="back" class="btn btn-success" type="button">返回</button>
+                            <button type="button" id="commit" class="btn btn-success" style="float: right;">提交</button>
 
-                            <form id="create_lot_list" method="post" action="{{url('new_lot')}}/{{$work_order->work_order_serial}}">
-                                <input name="all_num" value="{{$all_num}}" type="hidden">
-                                <input name="lot_num" value="{{$per_num}}" type="hidden">
-                                <input name="bill_date" value="{{$bill_date}}" type="hidden">
-                                <input name="max_num" value="{{$work_order->work_order_rest_qty - $work_order->work_order_wip_qty}}" type="hidden">
-                                <button id="backto" class="btn btn-success" type="button">返回</button>
-                                <button type="button" id="commit" class="btn btn-success" style="float: right;">提交</button>
-                            </form>
-
+                        </form>
+                        {{--</div>--}}
                     </div>
                 </div>
             </div>
@@ -110,17 +107,7 @@
 
 
     <script src="{{asset('resources/js/plugins/layer/laydate/laydate.js')}}"></script>
-    <script>
-        $(document).ready(function () {
-            $("#commit").click(function () {
-                $("#create_lot_list").submit();
-            }) ;
-            $("#backto").click(function () {
-                window.location.href = '{{url('create_run_card')}}';
-            }) ;
-        });
 
-    </script>
 
 
     <script src="{{asset('resources/js/plugins/jeditable/jquery.jeditable.js')}}"></script>
@@ -136,8 +123,11 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function () {
-            $("#search_result").click(function () {
-
+            $("#commit").click(function () {
+                $('#create_lot').submit();
+            });
+            $("#back").click(function () {
+                window.location.href = "{{url("create_run_card")}}";
             });
             $('.dataTables-example').dataTable();
 

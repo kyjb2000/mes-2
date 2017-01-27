@@ -43,7 +43,7 @@
                                 @foreach ($run_trace as $run_trace)
                                     <tr>
                                         <td>{{$num}}</td>
-                                        <td><a href="#">{{$run_trace->run_trace_lotno}}</a></td>
+                                        <td><a href="{{url('dismantle_lot')}}/{{$run_trace->run_trace_serial}}">{{$run_trace->run_trace_lotno}}</a></td>
                                         <td>{{$run_trace->run_trace_parent_lot}}</td>
                                         <td>{{$run_trace->class_flow_make_name}}</td>
                                         <td>
@@ -64,7 +64,11 @@
                                                 Queue
                                             @endif
                                         </td>
-                                        <td>{{$run_trace->class_flow_stage_name}}({{$run_trace->class_flow_stage_sort}})</td>
+                                        <td>
+                                            @if(!empty($run_trace->class_flow_stage_name) && !empty($run_trace->class_flow_stage_sort))
+                                                {{$run_trace->class_flow_stage_name}}({{$run_trace->class_flow_stage_sort}})
+                                            @endif
+                                        </td>
                                         <td>{{$run_trace->run_trace_process_name}}</td>
 
                                     </tr>
